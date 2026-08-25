@@ -96,7 +96,7 @@ func (s *Scheduler) Complete(id string, err error, now time.Time) (Job, error) {
 		job.Status = JobSucceeded
 	}
 	s.jobs[id] = job
-	s.running = true
+	s.running = false
 	return job, nil
 }
 func (s *Scheduler) Skip(id string, reason string, now time.Time) (Job, error) {
