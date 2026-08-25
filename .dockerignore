@@ -1,0 +1,5 @@
+.git/
+.caches/
+*.db
+*.db-shm
+*.db-wal
