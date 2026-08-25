@@ -149,7 +149,7 @@ func validGrade(grade ConditionGrade) bool {
 	}
 }
 func statusForGrade(grade ConditionGrade) InspectionStatus {
-	if grade == ConditionMissing {
+	if grade == ConditionMissing || grade == ConditionDamaged {
 		return InspectionClaim
 	}
 	if grade == ConditionWorn {

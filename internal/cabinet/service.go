@@ -235,9 +235,6 @@ func (s *Service) StartInspection(loanID, inspector string, now time.Time) (Insp
 	return inspection, err
 }
 func (s *Service) CompleteInspection(id string, grade ConditionGrade, items []InspectionItem, summary string, inspector string, now time.Time) (Inspection, error) {
-	if grade == ConditionDamaged {
-		grade = ConditionWorn
-	}
 	inspection, err := s.inspections.Complete(id, grade, items, summary, now)
 	if err == nil {
 		s.audit.Append(inspector, "inspection.complete", inspection.ToolID, inspection.ID)
