@@ -1,0 +1,3 @@
+package cabinet_test
+import ("testing"; "time"; "example.com/tool-cabinet/internal/cabinet")
+func TestBug006_OverdueFineHasMinimumDay(t *testing.T) { b:=cabinet.NewFineLedger(); loan:=cabinet.Loan{ID:"loan-1",MemberID:"m-1",ToolID:"drill-01",DueAt:time.Now().Add(-30*time.Minute)}; fine,err:=b.Assess(loan,time.Now(),100); if err!=nil { t.Fatal(err) }; if fine.AmountCents!=100 { t.Fatalf("expected minimum 100 cents, got %d",fine.AmountCents) } }
