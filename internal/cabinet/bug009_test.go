@@ -1,0 +1,3 @@
+package cabinet_test
+import ("context"; "testing"; "time"; "example.com/tool-cabinet/internal/cabinet")
+func TestBug009_SchedulerCanRunNextJob(t *testing.T) { s:=cabinet.NewScheduler(); first,_:=s.Enqueue("one",time.Now()); second,_:=s.Enqueue("two",time.Now()); claimed,_:=s.Claim(time.Now()); if claimed.ID!=first.ID { t.Fatalf("unexpected first job %s",claimed.ID) }; if _,err:=s.Complete(first.ID,nil,time.Now()); err!=nil { t.Fatal(err) }; claimed2,err:=s.RunOnce(context.Background(),time.Now(),func(context.Context,cabinet.Job)error{return nil}); if err!=nil || claimed2.ID!=second.ID { t.Fatalf("second job did not run: %v %+v",err,claimed2) } }
