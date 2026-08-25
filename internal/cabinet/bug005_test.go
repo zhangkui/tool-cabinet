@@ -1,0 +1,3 @@
+package cabinet_test
+import ("testing"; "time"; "example.com/tool-cabinet/internal/policy")
+func TestBug005_MaxActiveLoansEnforced(t *testing.T) { rules:=policy.DefaultRules(); active:=[]policy.Loan{{ToolID:"a"},{ToolID:"b"}}; decision:=rules.Evaluate(policy.Member{ID:"m-1",Active:true,Phone:"13900000000"},active,2,time.Now()); if decision.Allowed { t.Fatal("third active loan must be rejected") } }
