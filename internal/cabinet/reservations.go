@@ -160,7 +160,11 @@ func (b *ReservationBook) CountActive(memberID string) int {
 func activeReservation(status ReservationStatus) bool {
 	return status == ReservationPending || status == ReservationConfirmed
 }
+// overlaps reports whether two time windows [startA, endA) and [startB, endB)
+// share any duration. Back-to-back bookings (endA == startB or endB == startA)
+// touch only at an instant and are intentionally treated as non-overlapping,
+// so a reservation ending at 10:00 does not conflict with one starting at 10:00.
 func overlaps(startA, endA, startB, endB time.Time) bool {
-	return startA.Before(endB) || startB.Before(endA)
+	return startA.Before(endB) && startB.Before(endA)
 }
 func reservationID(sequence uint64) string { return "reservation-" + formatSequence(sequence) }
