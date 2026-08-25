@@ -95,7 +95,7 @@ func (l *Locker) ReportFault(compartmentID, actor, reason string) error {
 	if !ok {
 		return ErrCompartmentNotFound
 	}
-	compartment.State = CompartmentClosed
+	compartment.State = CompartmentFault
 	compartment.FaultReason = reason
 	l.compartments[compartmentID] = compartment
 	l.record(compartmentID, compartment.ToolID, "fault", actor, reason)
