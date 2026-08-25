@@ -27,6 +27,9 @@ func (c *Cabinet) Reserve(ctx context.Context, toolID string, hold time.Duration
 	c.mu.Unlock()
 	select {
 	case <-ctx.Done():
+		c.mu.Lock()
+		c.tools[toolID] = "available"
+		c.mu.Unlock()
 		return ctx.Err()
 	case <-time.After(hold):
 	}
