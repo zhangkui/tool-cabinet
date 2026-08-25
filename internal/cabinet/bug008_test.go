@@ -1,0 +1,3 @@
+package cabinet_test
+import ("testing"; "time"; "example.com/tool-cabinet/internal/cabinet")
+func TestBug008_DamagedInspectionCreatesClaim(t *testing.T) { b:=cabinet.NewInspectionBook(); loan:=cabinet.Loan{ID:"loan-1",MemberID:"m-1",ToolID:"drill-01"}; item,_:=b.Start(loan,"inspector",time.Now()); result,err:=b.Complete(item.ID,cabinet.ConditionDamaged,[]cabinet.InspectionItem{{Name:"外观完整",Passed:false}},"机身破裂",time.Now()); if err!=nil { t.Fatal(err) }; if result.Status!=cabinet.InspectionClaim { t.Fatalf("expected claim, got %s",result.Status) } }
