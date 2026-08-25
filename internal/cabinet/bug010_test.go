@@ -1,0 +1,3 @@
+package cabinet_test
+import ("testing"; "example.com/tool-cabinet/internal/cabinet")
+func TestBug010_FaultedCompartmentIsMarkedFault(t *testing.T) { l:=cabinet.NewLocker(); if err:=l.ReportFault("slot-a01","admin","door jam"); err!=nil { t.Fatal(err) }; snapshot:=l.Snapshot(); if len(snapshot)!=2 || snapshot[0].State!=cabinet.CompartmentFault && snapshot[1].State!=cabinet.CompartmentFault { t.Fatalf("fault state missing: %+v",snapshot) } }
