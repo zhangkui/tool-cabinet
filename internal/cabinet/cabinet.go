@@ -25,10 +25,20 @@ func (c *Cabinet) Reserve(ctx context.Context, toolID string, hold time.Duration
 	}
 	c.tools[toolID] = "reserved"
 	c.mu.Unlock()
+	// A stoppable timer avoids leaking timers past the hold window when a
+	// reservation is cancelled mid-wait (common under concurrent booking).
+	timer := time.NewTimer(hold)
+	defer timer.Stop()
 	select {
 	case <-ctx.Done():
+		// Restore the shared tool state so the cancellation does not poison
+		// it for the next resident. The reservation never reached "borrowed",
+		// so rolling back to "available" keeps concurrent bookers consistent.
+		c.mu.Lock()
+		c.tools[toolID] = "available"
+		c.mu.Unlock()
 		return ctx.Err()
-	case <-time.After(hold):
+	case <-timer.C:
 	}
 	c.mu.Lock()
 	c.tools[toolID] = "borrowed"
