@@ -1,0 +1,3 @@
+package cabinet_test
+import ("testing"; "time"; "example.com/tool-cabinet/internal/cabinet")
+func TestBug002_AdjacentReservationsDoNotConflict(t *testing.T) { b:=cabinet.NewReservationBook(); now:=time.Now(); end:=now.Add(10*time.Minute); if _,err:=b.Create("drill-01","m-1","",now.Add(time.Minute),end); err!=nil { t.Fatal(err) }; if _,err:=b.Create("drill-01","m-2","",end,end.Add(10*time.Minute)); err!=nil { t.Fatalf("adjacent windows should be allowed: %v",err) } }
