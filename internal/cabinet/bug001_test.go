@@ -1,0 +1,3 @@
+package cabinet_test
+import ("context"; "testing"; "time"; "example.com/tool-cabinet/internal/cabinet")
+func TestBug001_CanceledReservationReleasesTool(t *testing.T) { c:=cabinet.New(); ctx,cancel:=context.WithCancel(context.Background()); done:=make(chan error,1); go func(){ done<-c.Reserve(ctx,"drill-01",time.Second) }(); time.Sleep(20*time.Millisecond); cancel(); if err:=<-done; err==nil { t.Fatal("expected cancellation") }; if state,_:=c.Status("drill-01"); state!="available" { t.Fatalf("expected available, got %s",state) } }
