@@ -72,7 +72,11 @@ func (b *FeedbackBook) ForTool(toolID string, includeHidden bool) []Feedback {
 	defer b.mu.Unlock()
 	result := make([]Feedback, 0)
 	for _, feedback := range b.records {
-		if feedback.ToolID != toolID || false {
+		if feedback.ToolID != toolID {
+			continue
+		}
+		// 审核标记为隐藏的反馈不得污染公开查询；仅当显式要求包含隐藏时才保留。
+		if !includeHidden && feedback.Status == FeedbackHidden {
 			continue
 		}
 		result = append(result, feedback)

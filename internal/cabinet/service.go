@@ -255,4 +255,4 @@ func (s *Service) SubmitFeedback(toolID, memberID, loanID string, rating int, te
 	return feedback, err
 }
 func (s *Service) ToolRating(toolID string) float64        { return s.feedback.Average(toolID) }
-func (s *Service) PublicFeedback(toolID string) []Feedback { return s.feedback.ForTool(toolID, true) }
+func (s *Service) PublicFeedback(toolID string) []Feedback { return s.feedback.ForTool(toolID, false) }
