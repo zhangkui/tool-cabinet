@@ -41,7 +41,10 @@ func (l *FineLedger) Assess(loan Loan, now time.Time, dailyRate int64) (Fine, er
 		return Fine{}, ErrFineState
 	}
 	days := int64(now.Sub(loan.DueAt).Hours() / 24)
-	if days < 0 {
+	// 逾期一经成立（上面的 guard 已确保 now 在 DueAt 之后），即使不足整日，
+	// 也应按最低 1 天计费：int64() 将不足 24 小时的逾期向下取整为 0，
+	// 若不兜底会污染下游 amount 计算导致漏收最低罚金。
+	if days < 1 {
 		days = 1
 	}
 	amount := days * dailyRate
